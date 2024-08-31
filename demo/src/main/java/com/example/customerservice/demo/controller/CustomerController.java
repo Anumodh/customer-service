@@ -1,25 +1,60 @@
-package com.example.customerservice.demo.controller;
+package com.example.customerservice.demo.controller; 
 
-// import org.springframework.beans.factory.annotation.Value; 
-import org.springframework.web.bind.annotation.RequestMapping; 
-import org.springframework.web.bind.annotation.RequestMethod; 
-import org.springframework.web.bind.annotation.RestController; 
+import com.example.customerservice.demo.model.CustomerRequest;
+import com.example.customerservice.demo.dao.dto.Customer;
+import com.example.customerservice.demo.mapper.CustomerMapper;
+import com.example.customerservice.demo.service.CustomerService;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
+// import jakarta.validation.Valid;
 
 @RestController
-public class CustomerController { 
+@RequestMapping("/api")
+public class CustomerController {
 
-	// Injecting the value of 'my.website.name' 
-	// property from configuration 
-//	@Value("${my.website.name}") 
-//	private String myWebsiteName; 
+    private final CustomerService customerService;
 
-	// Handling GET requests at the root path ("/") 
-	// and returning a welcome message 
-	@RequestMapping(path = "/hello", method = RequestMethod.GET) 
-	public String welcome() { 
-		// Constructing and returning a welcome message 
-		// including the injected website name 
-		return "Welcome to Springboot111"; 
-	} 
+    @Autowired
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
-} 
+    @PostMapping("/customers")
+    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerRequest customerRequest) {
+        Customer customer = CustomerMapper.toEntity(customerRequest);
+
+        Customer customerResp = customerService.saveCustomer(customer);
+        return new ResponseEntity<>(customerResp, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/customers/{id}")
+    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
+    Customer customer = customerService.getCustomerById(id);
+    
+    if (customer == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+    return ResponseEntity.ok(customer);
+}
+
+    @GetMapping("/customers")
+    public ResponseEntity<List<Customer>> getAllCustomers(@RequestParam(required = false) String state) {
+        List<Customer> customers;
+
+        if (state != null && !state.isEmpty()) {
+            customers = customerService.getCustomersByState(state);
+        } else {
+            customers = customerService.getAllCustomers();
+        }
+        return ResponseEntity.ok(customers);
+    }
+	
+}
