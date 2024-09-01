@@ -7,7 +7,6 @@ import com.example.customerservice.demo.messaging.MessageProducer;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +17,6 @@ public class CustomerService {
   @Autowired
   MessageProducer messageProducer;
 
-
-    @Autowired
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }

@@ -5,13 +5,16 @@ import com.example.customerservice.demo.dao.dto.Customer;
 import com.example.customerservice.demo.mapper.CustomerMapper;
 import com.example.customerservice.demo.service.CustomerService;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+// import org.springframework.validation.BindingResult;
+
+
 
 
 // import jakarta.validation.Valid;
@@ -22,15 +25,14 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
     @PostMapping("/customers")
-    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerRequest customerRequest) {
-        Customer customer = CustomerMapper.toEntity(customerRequest);
+    public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerRequest customerRequest) {
 
+        Customer customer = CustomerMapper.toEntity(customerRequest);
         Customer customerResp = customerService.saveCustomer(customer);
         return new ResponseEntity<>(customerResp, HttpStatus.CREATED);
     }

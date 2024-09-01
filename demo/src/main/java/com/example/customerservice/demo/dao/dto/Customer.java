@@ -1,11 +1,8 @@
 package com.example.customerservice.demo.dao.dto;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.util.List;
 import lombok.*;
-
-
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,12 +19,10 @@ public class Customer {
     private String lastName;
     private String customerId;
     private Integer age;
-    private BigDecimal spendingLimit;
+    private Double spendingLimit;
     private String mobileNumber;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
     private List<Address> address;
-
-    // Getters and Setters
 }
 
