@@ -2,8 +2,7 @@ package com.example.customerservice.demo.service;
 
 import com.example.customerservice.demo.dao.CustomerRepository;
 import com.example.customerservice.demo.dao.dto.Customer;
-// import com.example.customerservice.demo.mapper.CustomerMapper;
-// import com.example.customerservice.demo.model.CustomerRequest;
+import com.example.customerservice.demo.messaging.MessageProducer;
 
 import java.util.List;
 
@@ -15,6 +14,9 @@ import org.springframework.stereotype.Service;
 public class CustomerService {
 
   private final CustomerRepository customerRepository;
+
+  @Autowired
+  MessageProducer messageProducer;
 
 
     @Autowired
@@ -28,7 +30,11 @@ public class CustomerService {
 
 
     public Customer saveCustomer(Customer customer) {
-      return customerRepository.save(customer);
+
+      Customer savedCustomer = customerRepository.save(customer);
+      messageProducer.sendMessage(customer);
+      return savedCustomer;
+      
     }
 
     public Customer getCustomerById(Long id) {
