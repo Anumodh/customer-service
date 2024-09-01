@@ -1,23 +1,16 @@
-package com.example.customerservice.demo.controller; 
+package com.example.customerservice.demo.controller;
 
 import com.example.customerservice.demo.model.CustomerRequest;
 import com.example.customerservice.demo.dao.dto.Customer;
 import com.example.customerservice.demo.mapper.CustomerMapper;
 import com.example.customerservice.demo.service.CustomerService;
-
 import jakarta.validation.Valid;
-
-import java.util.List;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-// import org.springframework.validation.BindingResult;
-
-
-
-
-// import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -39,24 +32,25 @@ public class CustomerController {
 
     @GetMapping("/customers/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-    Customer customer = customerService.getCustomerById(id);
-    
-    if (customer == null) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        Customer customer = customerService.getCustomerById(id);
+
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(customer);
     }
-    return ResponseEntity.ok(customer);
-}
 
     @GetMapping("/customers")
-    public ResponseEntity<List<Customer>> getAllCustomers(@RequestParam(required = false) String state) {
-        List<Customer> customers;
+    public ResponseEntity<Slice<Customer>> getAllCustomers(@RequestParam(required = false) String state,
+            @PageableDefault(size = 2) Pageable pageable) {
 
+        Slice<Customer> customers;
         if (state != null && !state.isEmpty()) {
             customers = customerService.getCustomersByState(state);
         } else {
-            customers = customerService.getAllCustomers();
+            customers = customerService.getAllCustomers(pageable);
         }
         return ResponseEntity.ok(customers);
     }
-	
+
 }

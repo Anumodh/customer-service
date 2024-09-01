@@ -4,9 +4,9 @@ import com.example.customerservice.demo.dao.CustomerRepository;
 import com.example.customerservice.demo.dao.dto.Customer;
 import com.example.customerservice.demo.messaging.MessageProducer;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,8 +21,8 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public List<Customer> getAllCustomers() {
-      return customerRepository.findAll();
+    public Slice<Customer> getAllCustomers(Pageable pageable) {
+      return customerRepository.findAll(pageable);
   }
 
 
@@ -38,7 +38,7 @@ public class CustomerService {
       return customerRepository.findById(id).orElse(null);
     }
 
-    public List<Customer> getCustomersByState(String state) {
+    public Slice<Customer> getCustomersByState(String state) {
       return customerRepository.findByAddress_State(state);
   }
 
