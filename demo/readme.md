@@ -7,7 +7,7 @@ docker exec -it broker kafka-topics --create --topic customers --bootstrap-serve
 docker exec -it broker kafka-topics --describe --topic customers --bootstrap-server broker:9092
 
 ### Kafka commands - consumer
-docker exec -it broker kafka-console-consumer --topic customers  --bootstrap-server broker:9092
+docker exec -it broker kafka-console-consumer --topic customers  --bootstrap-server broker:9092  --isolation-level read_committed
 
 ### Kafka commands - producer
 docker exec -it broker kafka-console-producer  --topic customers  --bootstrap-server broker:9092

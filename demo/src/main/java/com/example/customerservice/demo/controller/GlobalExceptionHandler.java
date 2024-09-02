@@ -22,11 +22,17 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-//TODO: handle this
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // TODO: handle this
     // @ExceptionHandler(InvalidAddressTypeException.class)
-    // public ResponseEntity<String> handleInvalidAddressTypeException(InvalidAddressTypeException ex) {
-    //     return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    // public ResponseEntity<String>
+    // handleInvalidAddressTypeException(InvalidAddressTypeException ex) {
+    // return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     // }
 
 }
-
