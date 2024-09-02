@@ -22,7 +22,8 @@ public class Customer {
     private Double spendingLimit;
     private String mobileNumber;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> address;
+
 }
 

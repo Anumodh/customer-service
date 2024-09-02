@@ -14,12 +14,12 @@ public class UniqueAddressTypesValidator implements ConstraintValidator<UniqueAd
     @Override
     public boolean isValid(List<AddressRequest> addressList, ConstraintValidatorContext context) {
         if (addressList == null || addressList.isEmpty()) {
-            return true; // Let @NotEmpty or @NotNull handle this if needed
+            return true;
         }
 
         Set<String> types = new HashSet<>();
         for (AddressRequest address : addressList) {
-            if (!types.add(address.getType().toLowerCase())) { // Convert to lowercase for case-insensitive check
+            if (!types.add(address.getType().toLowerCase())) { 
                 return false; // Duplicate type found
             }
         }

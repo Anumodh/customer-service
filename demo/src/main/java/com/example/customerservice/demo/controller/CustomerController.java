@@ -41,16 +41,15 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public ResponseEntity<Slice<Customer>> getAllCustomers(@RequestParam(required = false) String state,
+    public ResponseEntity<Slice<Customer>> getAllCustomers(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String state,
             @PageableDefault(size = 2) Pageable pageable) {
 
-        Slice<Customer> customers;
-        if (state != null && !state.isEmpty()) {
-            customers = customerService.getCustomersByState(state);
-        } else {
-            customers = customerService.getAllCustomers(pageable);
-        }
+        Slice<Customer> customers = customerService.getCustomersByCriteria(name, city, state, pageable);
         return ResponseEntity.ok(customers);
     }
+
 
 }

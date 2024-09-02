@@ -43,6 +43,7 @@ public class CustomerService {
       throw new RuntimeException("failed to parse JSON");
     }
 
+    // test code to demonstrate transaction rollback if exception is thrown
     if (savedCustomer.getFirstName().equals("test_error")) {
       throw new RuntimeException("transaction failed");
     }
@@ -60,8 +61,14 @@ public class CustomerService {
     return customerRepository.findById(id).orElse(null);
   }
 
-  public Slice<Customer> getCustomersByState(String state) {
-    return customerRepository.findByAddress_State(state);
-  }
+  public Slice<Customer> getCustomersByCriteria(String name, String city, String state, Pageable pageable) {
+    if ((name == null || name.isEmpty()) && 
+        (city == null || city.isEmpty()) && 
+        (state == null || state.isEmpty())) {
+        return customerRepository.findAll(pageable);
+    }
+    return customerRepository.findCustomersByCriteria(name, city, state, pageable);
+}
+
 
 }
