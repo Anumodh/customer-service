@@ -5,7 +5,6 @@ import com.example.customerservice.demo.dao.dto.Customer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -17,12 +16,13 @@ public class CustomerService {
 
   private final CustomerRepository customerRepository;
 
-  @Autowired
-  private KafkaTemplate<String, String> kafkaTemplate;
+ private KafkaTemplate<String, String> kafkaTemplate;
 
-  public CustomerService(CustomerRepository customerRepository) {
+  public CustomerService(CustomerRepository customerRepository, KafkaTemplate<String, String> kafkaTemplate) {
     this.customerRepository = customerRepository;
-  }
+    this.kafkaTemplate = kafkaTemplate;
+}
+
 
   public Slice<Customer> getAllCustomers(Pageable pageable) {
     return customerRepository.findAll(pageable);
